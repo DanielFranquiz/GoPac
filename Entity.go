@@ -8,23 +8,6 @@ type sprite struct {
 	col int
 }
 
-var player sprite
-
-func CaptureEntitiesPosition(maze []string) {
-	for row, line := range maze {
-		for col, char := range line {
-			switch char {
-			case 'P':
-				player = sprite{row, col}
-			}
-		}
-	}
-}
-
-func movePlayer(dir string,maze []string) {
-    player.row, player.col = makeMove(player.row, player.col, dir, maze)
-}
-
 func makeMove(oldRow, oldCol int, dir string, maze []string) (newRow, newCol int) {
     newRow, newCol = oldRow, oldCol
 

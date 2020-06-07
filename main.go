@@ -49,7 +49,7 @@ func main() {
 		return
 	}
 
-	CaptureEntitiesPosition(mazeloader.getmaze());
+	CapturePlayerPosition(mazeloader.getmaze());
 
 	// game loop
 	for {
