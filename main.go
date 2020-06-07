@@ -14,10 +14,23 @@ import (
 
 func printScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
-	for _, line := range maze { //_ is a placeholder for where the compiler would expet a variable name. we are ignoring that value
-		//range - first return value is the index of the element starting from 0, second return value is the value itself
-		fmt.Println(line)
+	for _, line := range maze { //_ is a placeholder for where the compiler would expect a variable name. we are ignoring that value
+		for _, chr := range line {
+            switch chr {
+            case '#':
+                fmt.Printf("%c", chr)
+            default:
+                fmt.Print(" ")
+            }
+        }
+		fmt.Println()
 	}
+
+	simpleansi.MoveCursor(player.row, player.col)
+    fmt.Print("P")
+
+    // Move cursor outside of maze drawing area
+    simpleansi.MoveCursor(len(maze)+1, 0)
 }
 
 //entry point of program defined as function with func
@@ -36,13 +49,14 @@ func main() {
 		return
 	}
 
-	// game loop never ending
+	CaptureEntitiesPosition(mazeloader.getmaze());
+
+	// game loop
 	for {
 		// update screen
 		maze := mazeloader.getmaze()
 		printScreen(maze)
 
-		// process input
 		// process input
 		input, err := readInput()
 		if err != nil {
@@ -51,7 +65,7 @@ func main() {
 		}
 
 		// process movement
-
+		movePlayer(input,maze)
 		// process collisions
 
 		// check game over
