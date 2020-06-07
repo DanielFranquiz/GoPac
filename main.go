@@ -8,7 +8,7 @@ import (
 	//"bufio" //buffered IO package will have the scanner object
 	"log"
 	//"os" //package to open outside files and release the file handler
-	
+
 	"github.com/danicat/simpleansi"
 )
 
@@ -25,11 +25,10 @@ func printScreen(maze []string) { //array of whatever size
 func main() {
 	// initialize game
 	// initialise game
-    initialise()
-    defer cleanup()
+	initialise()
+	defer cleanup()
 
-
-	mazeloader := MazeLoader{};
+	mazeloader := MazeLoader{}
 	// load resources
 	err := mazeloader.loadMaze("maze01.txt")
 	if err != nil {
@@ -47,20 +46,19 @@ func main() {
 		// process input
 		input, err := readInput()
 		if err != nil {
-   			log.Print("error reading input:", err)
+			log.Print("error reading input:", err)
 			break
 		}
-		
+
 		// process movement
 
 		// process collisions
 
 		// check game over
 		if input == "ESC" {
-    		break
+			break
 		}
-		
-		
+
 		// Temp: break infinite loop
 		//fmt package formatted input/output
 		//fmt.Println("Hello, Pac Go!")
