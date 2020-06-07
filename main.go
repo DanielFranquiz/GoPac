@@ -26,16 +26,10 @@ func renderScreen(maze []string) { //array of whatever size
 		fmt.Println()
 	}
 	//PLAYER
-	//renderPlayer(maze)
+	renderPlayer(maze)
 
-	////PLAYER
-	simpleansi.MoveCursor(player.row, player.col)
-	fmt.Print("P")
-
-	// Move cursor outside of maze drawing area
-	simpleansi.MoveCursor(len(maze)+1, 0)
 	//GHOST
-	//renderGhost(maze)
+	renderGhost(maze)
 }
 
 //entry point of program defined as function with func
@@ -54,7 +48,9 @@ func main() {
 		return
 	}
 
-	CapturePlayerPosition(mazeloader.getmaze());
+	capturePlayerPosition(mazeloader.getmaze());
+	
+	captureGhostPosition(mazeloader.getmaze());
 
 	// game loop
 	for {
@@ -71,7 +67,8 @@ func main() {
 
 		// process movement
 		movePlayer(input,maze)
-		//moveGhosts(maze)
+		moveGhosts(maze)
+
 		// process collisions
 
 		// check game over

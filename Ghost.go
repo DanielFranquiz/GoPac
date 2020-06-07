@@ -8,7 +8,7 @@ import (
 
 var ghosts []*sprite
 
-func CaptureGhostPosition(maze []string) {
+func captureGhostPosition(maze []string) {
 	for row, line := range maze {
 		for col, char := range line {
 			switch char {
@@ -21,12 +21,12 @@ func CaptureGhostPosition(maze []string) {
 
 func moveGhosts(maze []string) {
     for _, g := range ghosts {
-		dir := drawDirection()
+		dir := randomDirection()
         g.row, g.col = makeMove(g.row, g.col, dir, maze)
     }
 }
 
-func drawDirection() string {//temp AI
+func randomDirection() string {//temp AI
     dir := rand.Intn(4)//pick random dir
     move := map[int]string{
         0: "UP",

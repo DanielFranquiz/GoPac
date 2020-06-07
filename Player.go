@@ -7,7 +7,7 @@ import (
 
 var player sprite
 
-func CapturePlayerPosition(maze []string) {
+func capturePlayerPosition(maze []string) {
 	for row, line := range maze {
 		for col, char := range line {
 			switch char {
