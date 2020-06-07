@@ -12,7 +12,7 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
-func printScreen(maze []string) { //array of whatever size
+func renderScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
 	for _, line := range maze { //_ is a placeholder for where the compiler would expect a variable name. we are ignoring that value
 		for _, chr := range line {
@@ -25,12 +25,11 @@ func printScreen(maze []string) { //array of whatever size
         }
 		fmt.Println()
 	}
+	//PLAYER
+	renderPlayer(maze)
 
-	simpleansi.MoveCursor(player.row, player.col)
-    fmt.Print("P")
-
-    // Move cursor outside of maze drawing area
-    simpleansi.MoveCursor(len(maze)+1, 0)
+	//GHOST
+	renderGhost(maze)
 }
 
 //entry point of program defined as function with func
@@ -49,13 +48,15 @@ func main() {
 		return
 	}
 
-	CapturePlayerPosition(mazeloader.getmaze());
+	capturePlayerPosition(mazeloader.getmaze());
+	
+	captureGhostPosition(mazeloader.getmaze());
 
 	// game loop
 	for {
 		// update screen
 		maze := mazeloader.getmaze()
-		printScreen(maze)
+		renderScreen(maze)
 
 		// process input
 		input, err := readInput()
@@ -66,6 +67,8 @@ func main() {
 
 		// process movement
 		movePlayer(input,maze)
+		moveGhosts(maze)
+
 		// process collisions
 
 		// check game over
