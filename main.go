@@ -37,6 +37,7 @@ func renderScreen(maze []string) { //array of whatever size
 	//GHOST
 	renderGhost(maze)
 
+	//Refactor---------------------------------------------------------------
 	//PRINT SCORE
 	simpleansi.MoveCursor(len(maze)+1, 0)
 	fmt.Println("Score: ", score, "\tLives:", lives)
@@ -61,7 +62,7 @@ func main() {
 
 	maze := mazeloader.getmaze()
 
-
+	//Refactor---------------------------------------------------------------
 	//Record num of dots
 	for _, line := range maze {
 		for _, char := range line {
@@ -92,12 +93,14 @@ func main() {
 		movePlayer(input,maze)
 		moveGhosts(maze)
 
+		//Refactor---------------------------------------------------------------
 		// process collisions
 		for _, g := range ghosts {
 			if player == *g {
 				lives--
 			}
 		}
+		//Refactor---------------------------------------------------------------
 
 		// check game over
 		if input == "ESC" || numDots == 0 || lives <= 0 {
