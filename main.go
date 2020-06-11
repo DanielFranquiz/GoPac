@@ -14,7 +14,7 @@ import (
 
 var score int
 var numDots int
-var lives = 1
+var lives = 3
 
 func renderScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
@@ -93,11 +93,16 @@ func main() {
 		moveGhosts(maze)
 
 		// process collisions
+		for _, g := range ghosts {
+			if player == *g {
+				lives--
+			}
+		}
 
 		// check game over
-		if input == "ESC" {
-			break
-		}
+		if input == "ESC" || numDots == 0 || lives <= 0 {
+        break
+    	}
 
 		// Temp: break infinite loop
 		//fmt package formatted input/output
@@ -106,4 +111,7 @@ func main() {
 
 		// repeat
 	}
+
+	// Rendering the last frame
+	renderScreen(maze)
 }
