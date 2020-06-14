@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/danicat/simpleansi"
 )
 
 
@@ -14,7 +13,7 @@ func debugLog(s string){
 
 
 func renderDebug(maze []string, line int){
-	simpleansi.MoveCursor(len(maze)+line, 0)
+	moveCursor(len(maze)+line, 0)
 	fmt.Println("DEBUG: ", debug)
 }
 

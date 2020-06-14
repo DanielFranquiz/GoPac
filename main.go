@@ -13,27 +13,26 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
-
 func renderScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
-	for _, line := range maze { //_ is a placeholder for where the compiler would expect a variable name. we are ignoring that value
-		for _, chr := range line {
+	for _, line := range maze {
+        for _, chr := range line {
             switch chr {
             case '#':
-                fallthrough
+                fmt.Print(simpleansi.WithBlueBackground(cfg.Wall))
             case '.':
-                fmt.Printf("%c", chr)
+                fmt.Print(cfg.Dot)
             default:
                 fmt.Print(" ")
             }
         }
-		fmt.Println()
-	}
+        fmt.Println()
+    }
 	//PLAYER
-	renderPlayer(maze)
+	//renderPlayer(maze)
 
 	//GHOST
-	renderGhost(maze)
+	//renderGhost(maze)
 
 	//PRINT SCORE
 	renderGUI(maze, 1)
@@ -58,13 +57,18 @@ func main() {
 		return
 	}
 
+	//LOAD GRAPHICS ASSETS
+	err = loadConfig("config.json")
+	if err != nil {
+		log.Println("failed to load configuration:", err)
+		return
+	}
+
 	maze := mazeloader.getmaze()
 
 	//Record num of dots
 	recordNumDots(maze);
-
 	capturePlayerPosition(maze);
-	
 	captureGhostPosition(maze);
 
 	/////////CHANNELS////////////////

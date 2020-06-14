@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/danicat/simpleansi"
 )
 
 var player sprite
@@ -33,9 +32,9 @@ func checkForLiveLost(ghosts []*sprite){
 
 func renderPlayer(maze []string) {
 	////PLAYER
-	simpleansi.MoveCursor(player.row, player.col)
-	fmt.Print("P")
+	moveCursor(player.row, player.col)
+	fmt.Print(cfg.Player)
 
 	// Move cursor outside of maze drawing area
-	simpleansi.MoveCursor(len(maze)+1, 0)
+	moveCursor(len(maze)+1, 0)
 }

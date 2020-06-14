@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"github.com/danicat/simpleansi"
 )
 
 var ghosts []*sprite
@@ -39,7 +38,7 @@ func randomDirection() string {//temp AI
 
 func renderGhost(maze []string) {
 	for _, g := range ghosts {
-		simpleansi.MoveCursor(g.row, g.col)
-		fmt.Print("G")
+		moveCursor(g.row, g.col)
+		fmt.Print(cfg.Ghost)
 	}
 }
