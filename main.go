@@ -8,6 +8,7 @@ import (
 	//"bufio" //buffered IO package will have the scanner object
 	"log"
 	//"os" //package to open outside files and release the file handler
+	"time"
 
 	"github.com/danicat/simpleansi"
 )
@@ -66,20 +67,35 @@ func main() {
 	
 	captureGhostPosition(maze);
 
+	/////////CHANNELS////////////////
+		// process input
+		inputChannel := make(chan string)
+		go func(ch chan<- string) {
+			for {
+				input, err := readInput()
+				if err != nil {
+					log.Println("error reading input:", err)
+					ch <- "ESC"
+				}
+				ch <- input
+			}
+		}(inputChannel)
+	
 	// game loop
 	for {
-		// update screen
-		renderScreen(maze)
-
-		// process input
-		input, err := readInput()
-		if err != nil {
-			log.Print("error reading input:", err)
-			break
-		}
-
+		
+		//////////////////////////LOGIC
 		// process movement
-		movePlayer(input,maze)
+		select {
+		case input:= <-inputChannel:
+			if input == "ESC" {
+				lives = 0
+			}
+			debugLog(input)
+			movePlayer(input,maze)
+		default:
+		}
+		
 		moveGhosts(maze)
 
 		// process collisions
@@ -89,15 +105,14 @@ func main() {
 		eatNumDots(maze,player)
 
 		// check game over
-		if checkGameOver(input) {
-			debugLog("TRUE")
+		if checkGameOver() {
 			break;
-		} else {
-			debugLog("FALSE")
 		}
-		// repeat
-	}
+		/////////////GRAPHICS/////////
+		// update screen
+		renderScreen(maze)
 
-	// Rendering the last frame
-	renderScreen(maze)
+		// repeat
+		time.Sleep(200 * time.Millisecond)
+	}
 }

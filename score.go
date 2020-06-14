@@ -42,8 +42,8 @@ func renderGUI(maze []string, line int){
 	fmt.Println("Score: ", score, "\tLives:", lives)
 }
 
-func checkGameOver (input string) bool {
-	if input == "ESC" || numDots == 0 || lives <= 0 {
+func checkGameOver () bool {
+	if numDots == 0 || lives <= 0 {
         return true;
 		}
 	return false;
