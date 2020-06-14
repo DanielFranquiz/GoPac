@@ -22,6 +22,15 @@ func movePlayer(dir string,maze []string) {
     player.row, player.col = makeMove(player.row, player.col, dir, maze)
 }
 
+func checkForLiveLost(ghosts []*sprite){
+	for _, g := range ghosts {
+		if player == *g {
+			lives--
+			break
+		}
+	}
+}
+
 func renderPlayer(maze []string) {
 	////PLAYER
 	simpleansi.MoveCursor(player.row, player.col)
