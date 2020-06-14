@@ -12,12 +12,15 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
+
 func renderScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
 	for _, line := range maze { //_ is a placeholder for where the compiler would expect a variable name. we are ignoring that value
 		for _, chr := range line {
             switch chr {
             case '#':
+                fallthrough
+            case '.':
                 fmt.Printf("%c", chr)
             default:
                 fmt.Print(" ")
@@ -30,6 +33,12 @@ func renderScreen(maze []string) { //array of whatever size
 
 	//GHOST
 	renderGhost(maze)
+
+	//PRINT SCORE
+	renderGUI(maze, 1)
+
+	//DEBUG?
+	renderDebug(maze, 2)
 }
 
 //entry point of program defined as function with func
@@ -48,14 +57,18 @@ func main() {
 		return
 	}
 
-	capturePlayerPosition(mazeloader.getmaze());
+	maze := mazeloader.getmaze()
+
+	//Record num of dots
+	recordNumDots(maze);
+
+	capturePlayerPosition(maze);
 	
-	captureGhostPosition(mazeloader.getmaze());
+	captureGhostPosition(maze);
 
 	// game loop
 	for {
 		// update screen
-		maze := mazeloader.getmaze()
 		renderScreen(maze)
 
 		// process input
@@ -70,17 +83,21 @@ func main() {
 		moveGhosts(maze)
 
 		// process collisions
+		checkForLiveLost(ghosts)
+
+		// process score
+		eatNumDots(maze,player)
 
 		// check game over
-		if input == "ESC" {
-			break
+		if checkGameOver(input) {
+			debugLog("TRUE")
+			break;
+		} else {
+			debugLog("FALSE")
 		}
-
-		// Temp: break infinite loop
-		//fmt package formatted input/output
-		//fmt.Println("Hello, Pac Go!")
-		//break
-
 		// repeat
 	}
+
+	// Rendering the last frame
+	renderScreen(maze)
 }
