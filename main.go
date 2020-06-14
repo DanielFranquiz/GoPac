@@ -12,9 +12,6 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
-var score int
-var numDots int
-var lives = 3
 
 func renderScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
@@ -37,10 +34,11 @@ func renderScreen(maze []string) { //array of whatever size
 	//GHOST
 	renderGhost(maze)
 
-	//Refactor---------------------------------------------------------------
 	//PRINT SCORE
-	simpleansi.MoveCursor(len(maze)+1, 0)
-	fmt.Println("Score: ", score, "\tLives:", lives)
+	renderGUI(maze, 1)
+
+	//DEBUG?
+	renderDebug(maze, 2)
 }
 
 //entry point of program defined as function with func
@@ -59,19 +57,10 @@ func main() {
 		return
 	}
 
-
 	maze := mazeloader.getmaze()
 
-	//Refactor---------------------------------------------------------------
 	//Record num of dots
-	for _, line := range maze {
-		for _, char := range line {
-			switch char {
-			case '.':
-				numDots++
-			}
-		}
-	}
+	recordNumDots(maze);
 
 	capturePlayerPosition(maze);
 	
@@ -93,25 +82,19 @@ func main() {
 		movePlayer(input,maze)
 		moveGhosts(maze)
 
-		//Refactor---------------------------------------------------------------
 		// process collisions
-		for _, g := range ghosts {
-			if player == *g {
-				lives--
-			}
-		}
-		//Refactor---------------------------------------------------------------
+		checkForLiveLost(ghosts)
+
+		// process score
+		eatNumDots(maze,player)
 
 		// check game over
-		if input == "ESC" || numDots == 0 || lives <= 0 {
-        break
-    	}
-
-		// Temp: break infinite loop
-		//fmt package formatted input/output
-		//fmt.Println("Hello, Pac Go!")
-		//break
-
+		if checkGameOver(input) {
+			debugLog("TRUE")
+			break;
+		} else {
+			debugLog("FALSE")
+		}
 		// repeat
 	}
 
