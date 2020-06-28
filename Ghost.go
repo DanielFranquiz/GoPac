@@ -12,7 +12,7 @@ func captureGhostPosition(maze []string) {
 		for col, char := range line {
 			switch char {
 			case 'G':
-				ghosts = append(ghosts, &sprite{row, col})
+				ghosts = append(ghosts, &sprite{row, col, row, col})
 			}
 		}
 	}
