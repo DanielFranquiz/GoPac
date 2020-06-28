@@ -4,6 +4,8 @@ package main
 //makes code in other packages accessible to this program
 import (
 	"fmt"
+	"strconv"
+	"bytes"
 )
 
 var score int
@@ -42,7 +44,13 @@ func eatNumDots(maze []string, player sprite) {
 
 func renderGUI(maze []string, line int){
 	moveCursor(len(maze)+line, 0)
-	fmt.Println("Score: ", score, "\tLives:", lives)
+
+	livesRemaining := strconv.Itoa(lives) //converts lives int to a string
+    if cfg.UseEmoji {
+        livesRemaining = getLivesAsEmoji()
+	}
+	
+	fmt.Println("Score: ", score, "\tLives:", livesRemaining)
 }
 
 func checkGameOver () (bool,bool) {
@@ -58,4 +66,14 @@ func checkGameOver () (bool,bool) {
 	}
 
 	return Gameover,hasWon;
+}
+
+
+//concatenate the correct number of player emojis based on lives
+func getLivesAsEmoji() string{
+    buf := bytes.Buffer{}
+    for i := lives; i > 0; i-- {
+        buf.WriteString(cfg.Player)
+    }
+    return buf.String()
 }

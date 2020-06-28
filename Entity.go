@@ -5,7 +5,9 @@ import (
 
 type sprite struct {
 	row int
-	col int
+    col int
+    startRow int
+    startCol int
 }
 
 func makeMove(oldRow, oldCol int, dir string, maze []string) (newRow, newCol int) {
