@@ -21,18 +21,21 @@ func renderScreen(maze []string) { //array of whatever size
             case '#':
                 fmt.Print(simpleansi.WithBlueBackground(cfg.Wall))
             case '.':
-                fmt.Print(cfg.Dot)
+				fmt.Print(cfg.Dot)
+			case 'X':
+				fmt.Print(cfg.Pill)
             default:
-                fmt.Print(" ")
+                fmt.Print(cfg.Space)
             }
         }
         fmt.Println()
-    }
-	//PLAYER
-	//renderPlayer(maze)
-
+	}
+	
 	//GHOST
-	//renderGhost(maze)
+	renderGhost(maze)
+
+	//PLAYER
+	renderPlayer(maze)
 
 	//PRINT SCORE
 	renderGUI(maze, 1)
@@ -108,14 +111,23 @@ func main() {
 		// process score
 		eatNumDots(maze,player)
 
-		// check game over
-		if checkGameOver() {
-			break;
-		}
+
+
 		/////////////GRAPHICS/////////
 		// update screen
 		renderScreen(maze)
 
+		// check game over
+		var Gameover,HasWon = checkGameOver();
+
+		if Gameover {
+			if HasWon {
+
+			} else {
+				playerDeath(maze);
+			}
+			break;
+		}
 		// repeat
 		time.Sleep(200 * time.Millisecond)
 	}
