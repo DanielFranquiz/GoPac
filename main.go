@@ -11,6 +11,13 @@ import (
 	"time"
 
 	"github.com/danicat/simpleansi"
+
+	"flag"
+)
+
+var (
+	configFile = flag.String("config-file", "config.json", "path to custom configuration file")
+	mazeFile   = flag.String("maze-file", "maze01.txt", "path to a custom maze file")
 )
 
 func renderScreen(maze []string) { //array of whatever size
@@ -47,21 +54,22 @@ func renderScreen(maze []string) { //array of whatever size
 //entry point of program defined as function with func
 //main program takes no parameters and returns nothing
 func main() {
-	// initialize game
+	flag.Parse()
+
 	// initialise game
 	initialise()
 	defer cleanup()
 
 	mazeloader := MazeLoader{}
 	// load resources
-	err := mazeloader.loadMaze("maze01.txt")
+	err := mazeloader.loadMaze(*mazeFile)
 	if err != nil {
 		fmt.Println("failed to load maze:", err)
 		return
 	}
 
 	//LOAD GRAPHICS ASSETS
-	err = loadConfig("config.json")
+	err = loadConfig(*configFile)
 	if err != nil {
 		log.Println("failed to load configuration:", err)
 		return

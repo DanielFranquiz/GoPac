@@ -8,7 +8,7 @@ import (
 
 var score int
 var numDots int
-var lives = 1000
+var lives = 3
 
 func recordNumDots (maze []string) {
 	for _, line := range maze {
