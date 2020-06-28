@@ -13,27 +13,29 @@ import (
 	"github.com/danicat/simpleansi"
 )
 
-
 func renderScreen(maze []string) { //array of whatever size
 	simpleansi.ClearScreen()
-	for _, line := range maze { //_ is a placeholder for where the compiler would expect a variable name. we are ignoring that value
-		for _, chr := range line {
+	for _, line := range maze {
+        for _, chr := range line {
             switch chr {
             case '#':
-                fallthrough
+                fmt.Print(simpleansi.WithBlueBackground(cfg.Wall))
             case '.':
-                fmt.Printf("%c", chr)
+				fmt.Print(cfg.Dot)
+			case 'X':
+				fmt.Print(cfg.Pill)
             default:
-                fmt.Print(" ")
+                fmt.Print(cfg.Space)
             }
         }
-		fmt.Println()
+        fmt.Println()
 	}
-	//PLAYER
-	renderPlayer(maze)
-
+	
 	//GHOST
 	renderGhost(maze)
+
+	//PLAYER
+	renderPlayer(maze)
 
 	//PRINT SCORE
 	renderGUI(maze, 1)
@@ -58,13 +60,18 @@ func main() {
 		return
 	}
 
+	//LOAD GRAPHICS ASSETS
+	err = loadConfig("config.json")
+	if err != nil {
+		log.Println("failed to load configuration:", err)
+		return
+	}
+
 	maze := mazeloader.getmaze()
 
 	//Record num of dots
 	recordNumDots(maze);
-
 	capturePlayerPosition(maze);
-	
 	captureGhostPosition(maze);
 
 	/////////CHANNELS////////////////
@@ -104,14 +111,23 @@ func main() {
 		// process score
 		eatNumDots(maze,player)
 
-		// check game over
-		if checkGameOver() {
-			break;
-		}
+
+
 		/////////////GRAPHICS/////////
 		// update screen
 		renderScreen(maze)
 
+		// check game over
+		var Gameover,HasWon = checkGameOver();
+
+		if Gameover {
+			if HasWon {
+
+			} else {
+				playerDeath(maze);
+			}
+			break;
+		}
 		// repeat
 		time.Sleep(200 * time.Millisecond)
 	}
