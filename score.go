@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"strconv"
 	"bytes"
+	"time"
 )
 
 var score int
 var numDots int
 var lives = 3
+var pillTimer *time.Timer
 
 func recordNumDots (maze []string) {
 	for _, line := range maze {
@@ -22,9 +24,10 @@ func recordNumDots (maze []string) {
 		}
 	}	
 }
-
+//should move this function into player
 func eatNumDots(maze []string, player sprite) {
 
+	//can separate as own function
 	removeDot := func(row, col int) {
         maze[row] = maze[row][0:col] + " " + maze[row][col+1:]
     }
@@ -32,15 +35,26 @@ func eatNumDots(maze []string, player sprite) {
 	switch maze[player.row][player.col] {
 	case '.':
 		numDots--
-		score++
+		score++ //<- make function for this
 		//Remove dot from the maze
 		removeDot(player.row, player.col)
 	case 'X':
-        score += 10
-        removeDot(player.row, player.col)
+        score += 10//<- make function for this
+		removeDot(player.row, player.col)
+		go processPill()
 	}
 }
 
+func processPill() {
+	for _, g := range ghosts {
+		g.status = GhostStatusBlue
+	}
+	pillTimer = time.NewTimer(time.Second * cfg.PillDurationSecs)
+	<-pillTimer.C
+    for _, g := range ghosts {
+		g.status = GhostStatusNormal
+    }
+}
 
 func renderGUI(maze []string, line int){
 	moveCursor(len(maze)+line, 0)

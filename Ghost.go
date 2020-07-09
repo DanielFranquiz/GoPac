@@ -5,14 +5,28 @@ import (
 	"math/rand"
 )
 
-var ghosts []*sprite
+var ghosts []*ghost
+//var ghosts []*sprite
+
+type GhostStatus string
+
+const (
+	GhostStatusNormal GhostStatus = "Normal"
+	GhostStatusBlue   GhostStatus = "Blue"
+)
+
+type ghost struct {
+	position sprite
+	status   GhostStatus
+}
 
 func captureGhostPosition(maze []string) {
 	for row, line := range maze {
 		for col, char := range line {
 			switch char {
 			case 'G':
-				ghosts = append(ghosts, &sprite{row, col, row, col})
+				ghosts = append(ghosts, &ghost{sprite{row, col, row, col}, GhostStatusNormal})
+				//ghosts = append(ghosts, &sprite{row, col, row, col})
 			}
 		}
 	}
@@ -21,7 +35,8 @@ func captureGhostPosition(maze []string) {
 func moveGhosts(maze []string) {
     for _, g := range ghosts {
 		dir := randomDirection()
-        g.row, g.col = makeMove(g.row, g.col, dir, maze)
+		g.position.row, g.position.col = makeMove(g.position.row, g.position.col, dir, maze)
+		//g.row, g.col = makeMove(g.row, g.col, dir, maze)
     }
 }
 
@@ -38,7 +53,11 @@ func randomDirection() string {//temp AI
 
 func renderGhost(maze []string) {
 	for _, g := range ghosts {
-		moveCursor(g.row, g.col)
-		fmt.Print(cfg.Ghost)
+		moveCursor(g.position.row, g.position.col)
+		if g.status == GhostStatusNormal {
+			fmt.Printf(cfg.Ghost)
+		} else if g.status == GhostStatusBlue {
+			fmt.Printf(cfg.GhostBlue)
+		}
 	}
 }

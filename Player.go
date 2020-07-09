@@ -22,9 +22,9 @@ func movePlayer(dir string,maze []string) {
     player.row, player.col = makeMove(player.row, player.col, dir, maze)
 }
 
-func checkForLiveLost(ghosts []*sprite, maze []string) {
+func checkForLiveLost(ghosts []*ghost, maze []string) {
 	for _, g := range ghosts {
-		if player.row == g.row && player.col == g.col {
+		if player.row == g.position.row && player.col == g.position.col {
 
 			lives--
 
@@ -34,7 +34,7 @@ func checkForLiveLost(ghosts []*sprite, maze []string) {
 				player.row, player.col = player.startRow, player.startCol
 				
 				for _, g := range ghosts { // reset Ghosts Position
-					g.row, g.col = g.startRow, g.startCol
+					g.position.row, g.position.col = g.position.startRow, g.position.startCol
 				}
             }
 
