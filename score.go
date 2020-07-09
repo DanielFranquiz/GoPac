@@ -6,11 +6,17 @@ import (
 	"fmt"
 	"strconv"
 	"bytes"
+	"time"
+	"sync"
 )
 
 var score int
 var numDots int
 var lives = 3
+
+var pillTimer *time.Timer
+var pillMx sync.Mutex
+var ghostsStatusMx sync.RWMutex
 
 func recordNumDots (maze []string) {
 	for _, line := range maze {
@@ -22,9 +28,10 @@ func recordNumDots (maze []string) {
 		}
 	}	
 }
-
+//should move this function into player
 func eatNumDots(maze []string, player sprite) {
 
+	//can separate as own function
 	removeDot := func(row, col int) {
         maze[row] = maze[row][0:col] + " " + maze[row][col+1:]
     }
@@ -32,15 +39,38 @@ func eatNumDots(maze []string, player sprite) {
 	switch maze[player.row][player.col] {
 	case '.':
 		numDots--
-		score++
+		score++ //<- make function for this
 		//Remove dot from the maze
 		removeDot(player.row, player.col)
 	case 'X':
-        score += 10
-        removeDot(player.row, player.col)
+        score += 10//<- make function for this
+		removeDot(player.row, player.col)
+		go processPill()
 	}
 }
 
+func processPill() {
+	pillMx.Lock()
+	updateGhosts(ghosts, GhostStatusBlue)
+	if pillTimer != nil {
+		pillTimer.Stop()
+	}
+	pillTimer = time.NewTimer(time.Second * cfg.PillDurationSecs)
+	pillMx.Unlock()
+	<-pillTimer.C
+	pillMx.Lock()
+	pillTimer.Stop()
+	updateGhosts(ghosts, GhostStatusNormal)
+	pillMx.Unlock()
+}
+
+func updateGhosts(ghosts []*ghost, ghostStatus GhostStatus) {
+	ghostsStatusMx.Lock()
+	defer ghostsStatusMx.Unlock()
+	for _, g := range ghosts {
+		g.status = ghostStatus
+	}
+}
 
 func renderGUI(maze []string, line int){
 	moveCursor(len(maze)+line, 0)
