@@ -26,6 +26,8 @@ func checkForLiveLost(ghosts []*ghost, maze []string) {
 	for _, g := range ghosts {
 		if player.row == g.position.row && player.col == g.position.col {
 
+			//TODO Make Ghost die. Player Lives if touchs blue ghost. 
+
 			lives--
 
 			if lives != 0 {

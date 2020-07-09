@@ -7,12 +7,16 @@ import (
 	"strconv"
 	"bytes"
 	"time"
+	"sync"
 )
 
 var score int
 var numDots int
 var lives = 3
+
 var pillTimer *time.Timer
+var pillMx sync.Mutex
+var ghostsStatusMx sync.RWMutex
 
 func recordNumDots (maze []string) {
 	for _, line := range maze {
@@ -46,14 +50,26 @@ func eatNumDots(maze []string, player sprite) {
 }
 
 func processPill() {
-	for _, g := range ghosts {
-		g.status = GhostStatusBlue
+	pillMx.Lock()
+	updateGhosts(ghosts, GhostStatusBlue)
+	if pillTimer != nil {
+		pillTimer.Stop()
 	}
 	pillTimer = time.NewTimer(time.Second * cfg.PillDurationSecs)
+	pillMx.Unlock()
 	<-pillTimer.C
-    for _, g := range ghosts {
-		g.status = GhostStatusNormal
-    }
+	pillMx.Lock()
+	pillTimer.Stop()
+	updateGhosts(ghosts, GhostStatusNormal)
+	pillMx.Unlock()
+}
+
+func updateGhosts(ghosts []*ghost, ghostStatus GhostStatus) {
+	ghostsStatusMx.Lock()
+	defer ghostsStatusMx.Unlock()
+	for _, g := range ghosts {
+		g.status = ghostStatus
+	}
 }
 
 func renderGUI(maze []string, line int){
