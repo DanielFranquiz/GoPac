@@ -2,7 +2,8 @@ package main
 
 import (
 	"os"
-	"encoding/json"
+    "encoding/json"
+    "time"
 )
 
 var cfg Config
@@ -17,6 +18,8 @@ type Config struct {
     Death    string `json:"death"`
     Space    string `json:"space"`
     UseEmoji bool   `json:"use_emoji"`
+    GhostBlue        string        `json:"ghost_blue"`
+	PillDurationSecs time.Duration `json:"pill_duration_secs"`
 }
 
 func loadConfig(file string) error {
