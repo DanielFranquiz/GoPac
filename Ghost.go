@@ -18,6 +18,7 @@ const (
 type ghost struct {
 	position sprite
 	status   GhostStatus
+	dir string
 }
 
 func captureGhostPosition(maze []string) {
@@ -34,10 +35,18 @@ func captureGhostPosition(maze []string) {
 
 func moveGhosts(maze []string) {
     for _, g := range ghosts {
-		dir := randomDirection()
-		g.position.row, g.position.col = makeMove(g.position.row, g.position.col, dir, maze)
+		//check inter
+			//if inter
+				//set direction
+
+		g.dir = randomDirection()
+		g.position.row, g.position.col = makeMove(g.position.row, g.position.col, g.dir, maze)
 		//g.row, g.col = makeMove(g.row, g.col, dir, maze)
     }
+}
+
+func ghostReturnHome(g *ghost){
+	g.position.row, g.position.col = g.position.startRow, g.position.startCol
 }
 
 func randomDirection() string {//temp AI

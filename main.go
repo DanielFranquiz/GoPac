@@ -114,7 +114,7 @@ func main() {
 		moveGhosts(maze)
 
 		// process collisions
-		checkForLiveLost(ghosts,maze)
+		checkForCollision(ghosts,maze)
 
 		// process score
 		eatNumDots(maze,player)
@@ -132,7 +132,7 @@ func main() {
 			if HasWon {
 
 			} else {
-				//playerDeath(maze);
+				
 			}
 			break;
 		}

@@ -22,30 +22,38 @@ func movePlayer(dir string,maze []string) {
     player.row, player.col = makeMove(player.row, player.col, dir, maze)
 }
 
-func checkForLiveLost(ghosts []*ghost, maze []string) {
+func checkForCollision(ghosts []*ghost, maze []string) {
 	for _, g := range ghosts {
 		if player.row == g.position.row && player.col == g.position.col {
 
 			//TODO Make Ghost die. Player Lives if touchs blue ghost. 
+			if g.status == GhostStatusBlue{
+				ghostReturnHome(g)
 
-			lives--
+			}else{
+				lives--
 
-			if lives != 0 {
-                playerDeath(maze)
-                time.Sleep(1000 * time.Millisecond) //dramatic pause before resetting player position
-				player.row, player.col = player.startRow, player.startCol
-				
-				for _, g := range ghosts { // reset Ghosts Position
-					g.position.row, g.position.col = g.position.startRow, g.position.startCol
-				}
-            }
+				if lives != 0 {
+					playerHit(maze)
+					
+					for _, g := range ghosts { // reset Ghosts Position
+						ghostReturnHome(g)
+					}
+           		 }
+			}
 
 			break
 		}
 	}
 }
 
-func playerDeath(maze []string) {
+func playerHit(maze []string) {
+	playerDeathAnimation(maze)
+	time.Sleep(1000 * time.Millisecond) //dramatic pause before resetting player position
+	player.row, player.col = player.startRow, player.startCol
+}
+
+func playerDeathAnimation(maze []string) {
 	moveCursor(player.row, player.col)
     fmt.Print(cfg.Death)
     moveCursor(len(maze)+2, 0)
