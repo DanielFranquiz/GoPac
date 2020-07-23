@@ -18,6 +18,8 @@ import (
 var (
 	configFile = flag.String("config-file", "config.json", "path to custom configuration file")
 	mazeFile   = flag.String("maze-file", "maze01.txt", "path to a custom maze file")
+
+	//mazeFile   = flag.String("maze-file", "maze_AI.txt", "path to a custom maze file")
 )
 
 func renderScreen(maze []string) { //array of whatever size
@@ -106,7 +108,7 @@ func main() {
 			if input == "ESC" {
 				lives = 0
 			}
-			debugLog(input)
+			//debugLog(input)
 			movePlayer(input,maze)
 		default:
 		}

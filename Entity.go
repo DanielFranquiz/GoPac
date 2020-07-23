@@ -36,10 +36,40 @@ func makeMove(oldRow, oldCol int, dir string, maze []string) (newRow, newCol int
         }
     }
 
-    if maze[newRow][newCol] == '#' {
+    
+    if isWall(maze,newRow,newCol) {
         newRow = oldRow
         newCol = oldCol
     }
 
     return
+}
+
+func GetDirectionToVector(dir string) (int, int) {
+
+    var x, y int = 0,0
+
+    switch dir {
+    case "UP":
+        y = -1
+    case "DOWN":
+        y =  1
+    case "RIGHT":
+        x =   1
+    case "LEFT":
+        x = -1
+    }
+
+
+    return x,y
+}
+
+///////////UTIL///////////////////////////////////////////
+func isWall(maze []string, row int , col int) (bool){
+    var flag = false;
+
+	if maze[row][col] == '#' {
+        flag = true
+	}
+	return flag
 }

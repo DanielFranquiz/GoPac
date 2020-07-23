@@ -2,6 +2,7 @@ package main;
 
 import "os"; //package to open outside files and release the file handler
 
+
 func readInput() (string, error) {
     buffer := make([]byte, 100)
 

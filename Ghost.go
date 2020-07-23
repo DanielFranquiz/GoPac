@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 )
 
 var ghosts []*ghost
@@ -39,7 +40,32 @@ func moveGhosts(maze []string) {
 			//if inter
 				//set direction
 
-		g.dir = randomDirection()
+		//g.dir = randomDirection()
+		var x, y int = GetDirectionToVector(g.dir)
+
+		var wall = isWall(maze,g.position.row + y, g.position.col + x);
+
+		debugLog(strconv.FormatBool(wall))
+
+		if wall { // if we are at a wall
+			if g.dir == "UP" || g.dir == "DOWN"  { // if we are looking up or down
+				var xa, ya int = GetDirectionToVector("RIGHT")
+				if  !isWall(maze,g.position.row + ya, g.position.col + xa){ // decide left or right
+					g.dir = "RIGHT"
+				} else {
+					g.dir = "LEFT"
+				}
+			} else if g.dir == "RIGHT" || g.dir == "LEFT" { // if we are looking left or right
+				var xa, ya int = GetDirectionToVector("UP")
+				if  !isWall(maze,g.position.row + ya, g.position.col + xa){ // decide up or down
+					g.dir = "UP"
+				} else {
+					g.dir = "DOWN"
+				}
+			}
+		}
+			
+
 		g.position.row, g.position.col = makeMove(g.position.row, g.position.col, g.dir, maze)
 		//g.row, g.col = makeMove(g.row, g.col, dir, maze)
     }
